@@ -16,27 +16,27 @@ all_syn = load_synnoym()
 
 def keyboard(word, max_char=1):
     aug = nac.KeyboardAug(include_upper_case=False, aug_char_max=max_char)
-    auged_word = aug.augment(word)
+    auged_word = aug.augment(word)[0]
     return auged_word
 
 
 def insert_aug(word, max_char=1):
     aug = nac.RandomCharAug(action="insert", aug_char_max=max_char)
-    auged_word = aug.augment(word)
+    auged_word = aug.augment(word)[0]
     #print(word, auged_word)
     return auged_word
 
 
 def swap_aug(word, max_char=1):
     aug = nac.RandomCharAug(action="swap", aug_char_max=max_char)
-    auged_word = aug.augment(word)
+    auged_word = aug.augment(word)[0]
     #print(word, auged_word)
     return auged_word
 
 
 def delete_aug(word, max_char=1):
     aug = nac.RandomCharAug(action="delete", aug_char_max=max_char)
-    auged_word = aug.augment(word)
+    auged_word = aug.augment(word)[0]
     #print(word, auged_word)
     return auged_word
 
@@ -52,7 +52,7 @@ def synonym_aug(word):
 
 def ocr_aug(word, max_char=1):
     aug = nac.OcrAug(aug_char_max=max_char)
-    return aug.augment(word)
+    return aug.augment(word)[0]
 
 
 def get_random_attack(word, probs=[0.07, 0.07, 0.07, 0.07, 0.36, 0.36]):
