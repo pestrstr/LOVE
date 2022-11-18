@@ -1,6 +1,7 @@
 import tokenization
 import torch
 import collections
+from tqdm import tqdm
 from torch.utils.data import Dataset
 
 # VOCAB = 'data/vocab.txt'
@@ -15,19 +16,20 @@ def load_dataset(path, DIM=300, lower=True, loader_type='simple'):
     if loader_type == 'hard':
         all_embs = dict()
     cnt = 0
-    for line in open(path, encoding='utf8'):
-        cnt += 1
-        row = line.strip().split(' ')
-        if len(row) != DIM + 1:continue
-        word = row[0]
-        if lower:
-            word = str.lower(word)
-        if filter(word): continue
-        emb = [float(e) for e in row[1:]]
-        origin_repre.append(emb)
-        origin_words.append(word)
-        if loader_type == 'hard':
-            all_embs[word] = emb
+    with open(path, encoding='utf8') as file:
+        for line in tqdm(file, desc='Loading dataset in memory...'):
+            cnt += 1
+            row = line.strip().split(' ')
+            if len(row) != DIM + 1:continue
+            word = row[0]
+            if lower:
+                word = str.lower(word)
+            if filter(word): continue
+            emb = [float(e) for e in row[1:]]
+            origin_repre.append(emb)
+            origin_words.append(word)
+            if loader_type == 'hard':
+                all_embs[word] = emb
 
     # add <unk> token
     emb = [0.0 for _ in range(DIM)]
