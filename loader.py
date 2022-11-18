@@ -39,7 +39,7 @@ class SimpleLoader():
         return batch_words, batch_oririn_repre, batch_aug_repre_ids, mask
 
     def __call__(self, data_path, neg_sample_path=''):
-        dataset, _ = load_dataset(path=data_path, DIM=self.dim, lower=self.lowercase)
+        dataset = load_dataset(path=data_path, DIM=self.dim, lower=self.lowercase, loader_type='simple')
         dataset = TextData(dataset)
         train_iterator = DataLoader(dataset=dataset, batch_size=self.batch_size // 2, shuffle=self.shuffle,
                                     collate_fn=self.collate_fn)
@@ -78,7 +78,7 @@ class SimpleLoader():
         return batch_words, batch_oririn_repre, batch_aug_repre_ids, mask
 
     def __call__(self, data_path):
-        dataset, _ = load_dataset(path=data_path, DIM=self.dim, lower=self.lowercase)
+        dataset = load_dataset(path=data_path, DIM=self.dim, lower=self.lowercase, loader_type='aug')
         dataset = TextData(dataset)
         train_iterator = DataLoader(dataset=dataset, batch_size=self.batch_size // 2, shuffle=self.shuffle,
                                     collate_fn=self.collate_fn)
@@ -141,7 +141,7 @@ class SimpleLoader():
         return batch_words, batch_repre_with_hards, batch_aug_repre_ids, mask
 
     def __call__(self, data_path):
-        dataset, self.emb = load_dataset(path=data_path, DIM=self.dim, lower=self.lowercase)
+        dataset, self.emb = load_dataset(path=data_path, DIM=self.dim, lower=self.lowercase, loader_type='hard')
         dataset = TextData(dataset)
         train_iterator = DataLoader(dataset=dataset, batch_size=self.batch_size // (2 * (self.hard_neg_numbers+1)), shuffle=self.shuffle, collate_fn=self.collate_fn)
         return train_iterator

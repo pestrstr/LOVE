@@ -7,9 +7,13 @@ from torch.utils.data import Dataset
 # TOKENIZER = tokenization.FullTokenizer(vocab_file=VOCAB, do_lower_case=True)
 
 
-def load_dataset(path, DIM=300, lower=True):
+def load_dataset(path, DIM=300, lower=True, loader_type='simple'):
+
+    # loader_type: 'simple'/'aug'/'hard'
+
     origin_words, origin_repre = list(), list()
-    all_embs = dict()
+    if loader_type == 'hard':
+        all_embs = dict()
     cnt = 0
     for line in open(path, encoding='utf8'):
         cnt += 1
@@ -22,16 +26,22 @@ def load_dataset(path, DIM=300, lower=True):
         emb = [float(e) for e in row[1:]]
         origin_repre.append(emb)
         origin_words.append(word)
-        all_embs[word] = emb
+        if loader_type == 'hard':
+            all_embs[word] = emb
 
     # add <unk> token
     emb = [0.0 for _ in range(DIM)]
     origin_repre.append(emb)
     origin_words.append('<unk>')
-    all_embs['<unk>'] = emb
+    if loader_type == 'hard':
+        all_embs['<unk>'] = emb
 
     print('loaded! Word num = {a}'.format(a=len(origin_words)))
-    return {'origin_word': origin_words, 'origin_repre':origin_repre}, all_embs
+    if loader_type == 'hard':
+        # Return both lists and dict
+        return {'origin_word': origin_words, 'origin_repre':origin_repre}, all_embs
+    else:
+        return {'origin_word': origin_words, 'origin_repre':origin_repre}
 
 
 def load_predict_dataset(path):
@@ -48,7 +58,7 @@ class TextData(Dataset):
     def __init__(self, data):
         self.origin_word = data['origin_word']
         self.origin_repre = data['origin_repre']
-        #self.repre_ids = data['repre_ids']
+        # self.repre_ids = data['repre_ids']
 
     def __len__(self):
         return len(self.origin_word)

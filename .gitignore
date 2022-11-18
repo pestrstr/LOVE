@@ -128,3 +128,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# dataset
+data/crawl-300d-2M.vec
+
+# output
+model_*.pt
