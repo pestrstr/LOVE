@@ -51,17 +51,19 @@ def main():
     train_iterator = data_loader(data_path=args.dataset)
 
     model = Producer[args.model_type](args)
-    print(model)
     trainable_num = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print(trainable_num)
+    print(f"Number of trainable parameters: {trainable_num}")
     model.cuda()
+    ##
+    model.load_state_dict("./output/model_6.pt")  ## Load from checkpoint
+    ##
     optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
     scheduler = lr_scheduler.ExponentialLR(optimizer, gamma=args.gamma)
 
     criterion = loss_f[args.loss_type]()
 
     max_acc = 0
-    for e in range(args.epochs):
+    for e in range(6, args.epochs): ## Change here next time
         epoch_loss = 0
         batch_num = 0
 
@@ -70,8 +72,8 @@ def main():
             optimizer.zero_grad()
             batch_num += 1
 
-            if batch_num % 50 == 0:
-                print('sample = {b}, loss = {a}'.format(a=epoch_loss/batch_num, b=batch_num*args.batch_size))
+            #if batch_num % 50 == 0:
+            #    print('sample = {b}, loss = {a}'.format(a=epoch_loss/batch_num, b=batch_num*args.batch_size))
 
             # get produced vectors
             oririn_repre = oririn_repre.cuda()
