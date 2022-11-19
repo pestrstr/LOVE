@@ -55,7 +55,8 @@ def main():
     print(f"Number of trainable parameters: {trainable_num}")
     model.cuda()
     ##
-    model.load_state_dict("./output/model_6.pt")  ## Load from checkpoint
+    checkpoint = torch.load("./output/model_6.pt")
+    model.load_state_dict(checkpoint)  ## Load from checkpoint
     ##
     optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
     scheduler = lr_scheduler.ExponentialLR(optimizer, gamma=args.gamma)
