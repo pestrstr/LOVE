@@ -33,6 +33,7 @@ parser.add_argument('-vocab_path', help='the vocabulary used for training and in
 parser.add_argument('-hard_neg_numbers', help='the number of hard negatives in each mini-batch', type=int, default=3)
 parser.add_argument('-hard_neg_path', help='the file path of hard negative samples ', type=str, default='data/hard_neg_samples.txt')
 parser.add_argument('-vocab_size', help='the size of the vocabulart', type=int, default=0)
+parser.add_argument('-checkpoint', help='path of the checkpoint', type=str, default=None)
 
 
 try:
@@ -54,17 +55,28 @@ def main():
     trainable_num = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"Number of trainable parameters: {trainable_num}")
     model.cuda()
-    ##
-    checkpoint = torch.load("./output/model_6.pt")
-    model.load_state_dict(checkpoint)  ## Load from checkpoint
-    ##
     optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
+
     scheduler = lr_scheduler.ExponentialLR(optimizer, gamma=args.gamma)
 
     criterion = loss_f[args.loss_type]()
 
     max_acc = 0
-    for e in range(6, args.epochs): ## Change here next time
+
+    start_epoch = 0
+    ##
+    if args.checkpoint:
+        print('Loading from checkpoint...')
+        checkpoint = torch.load(args.checkpoint)
+        model.load_state_dict(checkpoint['model'])  ## Load from checkpoint
+        ## From next time, this time this cannot work
+        # optimizer.load_state_dict(checkpoint['model']) 
+        # scheduler.load_state(checkpoint['scheduler'])
+        # max_acc = checkpoint['max_acc']
+        # start_epoch = checkpoint['epoch']
+        #print(f'Loss for epoch {start_epoch}: {checkpoint["epoch_loss"]:.3f}')
+    ##
+    for e in range(start_epoch, args.epochs): ## Change here next time
         epoch_loss = 0
         batch_num = 0
 
@@ -95,8 +107,15 @@ def main():
         print('this is the {a} epoch, loss = {b}'.format(a=e + 1, b=epoch_loss / len(train_iterator)))
 
         if (e) % 1 == 0:
-            model_path = './output/model_{a}.pt'.format(a=e+1)
-            torch.save(model.state_dict(), model_path)
+            model_path = f'./output/model_{e+1}.pt'
+            checkpoint = {
+                'model': model.state_dict(),
+                'optimizer': optimizer.state_dict(),
+                'scheduler': scheduler.state_dict(),
+                'epoch': e,
+                'epoch_loss': epoch_loss / len(train_iterator),
+                'max_acc': max_acc}
+            torch.save(checkpoint, model_path)
             overall(args, model_path=model_path, tokenizer=TOKENIZER)
     return max_acc
 
