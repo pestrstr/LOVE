@@ -63,19 +63,19 @@ def main():
 
     max_acc = 0
 
-    start_epoch = 6 # this line should be modified next time
-    ##
+    start_epoch = 0
+    
+    # Load from checkpoint
     if args.checkpoint:
         print('Loading from checkpoint...')
         checkpoint = torch.load(args.checkpoint)
-        model.load_state_dict(checkpoint)  ## This line should be modifier next time
-        ## From next time, this time this cannot work
-        # optimizer.load_state_dict(checkpoint['model']) 
-        # scheduler.load_state(checkpoint['scheduler'])
-        # max_acc = checkpoint['max_acc']
-        # start_epoch = checkpoint['epoch']
-        #print(f'Loss for epoch {start_epoch}: {checkpoint["epoch_loss"]:.3f}')
-    ##
+        model.load_state_dict(checkpoint['model'])
+        optimizer.load_state_dict(checkpoint['optimizer']) 
+        scheduler.load_state(checkpoint['scheduler'])
+        max_acc = checkpoint['max_acc']
+        start_epoch = checkpoint['epoch']
+        print(f'Loss for epoch {start_epoch}: {checkpoint["epoch_loss"]:.3f}')
+    
     for e in range(start_epoch, args.epochs): ## Change here next time
         epoch_loss = 0
         batch_num = 0
