@@ -118,9 +118,9 @@ class SimpleLoader():
             batch_words_with_hards.append(word)
             batch_words_with_hards.extend(batch_hards)
             batch_repre_with_hards.append(self.emb[word])
-            for w in batch_hards:
-                if w not in self.emb:
-                    print('this word {a} does not in vocab'.format(a=w))
+            # for w in batch_hards:
+            #     if w not in self.emb:
+            #         print('this word {a} does not in vocab'.format(a=w))
             batch_repre_with_hards.extend([self.emb[w] if w in self.emb else self.emb['<unk>'] for w in batch_hards])
 
         aug_words, aug_repre, aug_ids = list(), list(), list()
