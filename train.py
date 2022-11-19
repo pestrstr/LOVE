@@ -63,12 +63,12 @@ def main():
 
     max_acc = 0
 
-    start_epoch = 0
+    start_epoch = 6 # this line should be modified next time
     ##
     if args.checkpoint:
         print('Loading from checkpoint...')
         checkpoint = torch.load(args.checkpoint)
-        model.load_state_dict(checkpoint['model'])  ## Load from checkpoint
+        model.load_state_dict(checkpoint)  ## This line should be modifier next time
         ## From next time, this time this cannot work
         # optimizer.load_state_dict(checkpoint['model']) 
         # scheduler.load_state(checkpoint['scheduler'])
