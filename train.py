@@ -4,6 +4,7 @@ import sys
 import os
 import argparse
 import tokenization
+from tqdm import tqdm
 from torch.optim import lr_scheduler
 from loss import registry as loss_f
 from loader import registry as loader
@@ -76,17 +77,17 @@ def main():
         start_epoch = checkpoint['epoch']
         print(f'Loss for epoch {start_epoch}: {checkpoint["epoch_loss"]:.3f}')
     
-    for e in range(start_epoch, args.epochs): ## Change here next time
+    for e in range(start_epoch, args.epochs):
         epoch_loss = 0
         batch_num = 0
 
-        for words, oririn_repre, aug_repre_ids, mask in train_iterator:
+        for words, oririn_repre, aug_repre_ids, mask in tqdm(train_iterator):
             model.train()
             optimizer.zero_grad()
             batch_num += 1
 
-            if batch_num % 50 == 0:
-                print('sample = {b}, loss = {a}'.format(a=epoch_loss/batch_num, b=batch_num*args.batch_size))
+            #if batch_num % 50 == 0:
+            #    print('sample = {b}, loss = {a}'.format(a=epoch_loss/batch_num, b=batch_num*args.batch_size))
 
             # get produced vectors
             oririn_repre = oririn_repre.cuda()
