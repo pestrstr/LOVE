@@ -85,8 +85,8 @@ def main():
             optimizer.zero_grad()
             batch_num += 1
 
-            #if batch_num % 50 == 0:
-            #    print('sample = {b}, loss = {a}'.format(a=epoch_loss/batch_num, b=batch_num*args.batch_size))
+            if batch_num % 50 == 0:
+                print('sample = {b}, loss = {a}'.format(a=epoch_loss/batch_num, b=batch_num*args.batch_size))
 
             # get produced vectors
             oririn_repre = oririn_repre.cuda()
