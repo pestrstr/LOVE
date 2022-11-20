@@ -71,7 +71,7 @@ def main():
         checkpoint = torch.load(args.checkpoint)
         model.load_state_dict(checkpoint['model'])
         optimizer.load_state_dict(checkpoint['optimizer']) 
-        scheduler.load_state(checkpoint['scheduler'])
+        scheduler.load_state_dict(checkpoint['scheduler'])
         max_acc = checkpoint['max_acc']
         start_epoch = checkpoint['epoch']
         print(f'Loss for epoch {start_epoch}: {checkpoint["epoch_loss"]:.3f}')
