@@ -104,6 +104,8 @@ def main():
 
             if args.bert == True:
                 aug_embeddings = model(aug_repre_ids, mask)[0]
+                print(oririn_repre.shape)
+                print(aug_embeddings.shape)
             else:
                 aug_embeddings = model(aug_repre_ids, mask)
             
