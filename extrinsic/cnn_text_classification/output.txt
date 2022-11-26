@@ -1,0 +1,38 @@
+load word embedding, size = 16188
+embedding word size = 16188
+in total, 3 words do not have embeddings
+{'<sep>', '<unk>', '<pad>'}
+epoch = 10
+Epoch: 01 | Epoch Time: 0m 5s
+	Train Loss: 0.647 | Train Acc: 62.87%
+	 Val. Loss: 0.575 |  Val. Acc: 71.79%
+Epoch: 02 | Epoch Time: 0m 3s
+	Train Loss: 0.526 | Train Acc: 74.73%
+	 Val. Loss: 0.503 |  Val. Acc: 75.90%
+Epoch: 03 | Epoch Time: 0m 3s
+	Train Loss: 0.459 | Train Acc: 79.35%
+	 Val. Loss: 0.476 |  Val. Acc: 78.68%
+Epoch: 04 | Epoch Time: 0m 2s
+	Train Loss: 0.408 | Train Acc: 82.18%
+	 Val. Loss: 0.478 |  Val. Acc: 77.37%
+Epoch: 05 | Epoch Time: 0m 2s
+	Train Loss: 0.367 | Train Acc: 84.50%
+	 Val. Loss: 0.445 |  Val. Acc: 80.01%
+Epoch: 06 | Epoch Time: 0m 2s
+	Train Loss: 0.320 | Train Acc: 87.26%
+	 Val. Loss: 0.436 |  Val. Acc: 80.45%
+Epoch: 07 | Epoch Time: 0m 2s
+	Train Loss: 0.294 | Train Acc: 88.44%
+	 Val. Loss: 0.427 |  Val. Acc: 81.29%
+Epoch: 08 | Epoch Time: 0m 2s
+	Train Loss: 0.256 | Train Acc: 90.82%
+	 Val. Loss: 0.440 |  Val. Acc: 80.71%
+Epoch: 09 | Epoch Time: 0m 2s
+	Train Loss: 0.220 | Train Acc: 92.56%
+	 Val. Loss: 0.425 |  Val. Acc: 81.93%
+Epoch: 10 | Epoch Time: 0m 2s
+	Train Loss: 0.187 | Train Acc: 94.54%
+	 Val. Loss: 0.427 |  Val. Acc: 80.96%
+	-------------------------------------------------------------
+	Test Loss: 0.422 | Test Acc: 80.88%
+	-------------------------------------------------------------
