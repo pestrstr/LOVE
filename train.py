@@ -63,7 +63,7 @@ def main():
 
     max_acc = 0
 
-    start_epoch = 0
+    start_epoch = 6
     ##
     if args.checkpoint:
         print('Loading from checkpoint...')

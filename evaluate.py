@@ -171,4 +171,4 @@ if __name__ == '__main__':
     from train import args
     args.vocab_size = vocab_size
     print(args)
-    overall(args, model_path='output/model_ merge.pt', tokenizer=TOKENIZER)
+    overall(args, model_path='output/love_bert_base_uncased.pt', tokenizer=TOKENIZER)
