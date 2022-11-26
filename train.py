@@ -47,11 +47,12 @@ except:
 
 
 def main():
+
+    TOKENIZER = tokenization.FullTokenizer(vocab_file=args.vocab_path, do_lower_case=args.lowercase)
+
     if args.bert == True:
-        TOKENIZER = BertTokenizer.from_pretrained(args.bert_type)
         model = BertModel.from_pretrained(args.bert_type)
     else:
-        TOKENIZER = tokenization.FullTokenizer(vocab_file=args.vocab_path, do_lower_case=args.lowercase)
         model = Producer[args.model_type](args)
 
     vocab_size = len(TOKENIZER.vocab)

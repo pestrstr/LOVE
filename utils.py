@@ -5,7 +5,7 @@ from tqdm import tqdm
 from torch.utils.data import Dataset
 
 # VOCAB = 'data/vocab.txt'
-# TOKENIZER = tokenization.FullTokenizer(vocab_file=VOCAB, do_lower_case=True)
+# TOKENIZE = tokenization.FullTokenizer(vocab_file=VOCAB, do_lower_case=True)
 
 
 def load_dataset(path, DIM=300, lower=True, loader_type='simple'):
