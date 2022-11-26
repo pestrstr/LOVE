@@ -15,6 +15,7 @@ from model import NamedEntityRecog
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 from train import train_model, evaluate
+import matplotlib.pyplot as plt
 
 seed_num = 42
 random.seed(seed_num)
@@ -102,6 +103,7 @@ def single_run(args, word_vocab, pretrain_word_embedding):
     batch_num = -1
     best_f1 = -1
     early_stop = 0
+    f1_acc = []
 
     for epoch in range(args.epochs):
         epoch_begin = time.time()
@@ -110,6 +112,9 @@ def single_run(args, word_vocab, pretrain_word_embedding):
         batch_num = train_model(train_dataloader, model, optimizer, batch_num, writer, use_gpu)
         new_f1 = evaluate(dev_dataloader, model, word_vocab, label_vocab, pred_file, score_file, eval_script, use_gpu)
         print('f1 is {} at {}th epoch on dev set'.format(new_f1, epoch + 1))
+        
+        f1_acc.append(new_f1)
+        
         if new_f1 > best_f1:
             best_f1 = new_f1
             print('new best f1 on dev set:', best_f1)
@@ -126,7 +131,7 @@ def single_run(args, word_vocab, pretrain_word_embedding):
         if early_stop > args.patience:
             print('early stop')
             break
-
+    
     train_end = time.time()
     train_cost = train_end - train_begin
     hour = int(train_cost / 3600)
@@ -138,6 +143,15 @@ def single_run(args, word_vocab, pretrain_word_embedding):
     print('train total cost {}h {}m {}s'.format(hour, min, second))
     print('-' * 50)
 
+    plt.plot(np.arange(1, args.epochs+1), f1_acc, linewidth='1', label='f1 on dev set')
+    plt.xticks(np.arange(1, args.epochs+1, 1))
+    plt.xlabel('epochs')
+    plt.ylabel('f1 on dev set over epochs')
+    plt.legend()
+    plt.savefig('output/f1_measure.pdf', bbox_inches='tight')
+    plt.close()
+
+    print("Now evaluating the best model...")
     model.load_state_dict(torch.load(model_name))
     test_acc = evaluate(test_dataloader, model, word_vocab, label_vocab, pred_file, score_file, eval_script, use_gpu)
     print('test acc on test set:', test_acc)
