@@ -144,7 +144,6 @@ def single_run(args, word_vocab, pretrain_word_embedding):
     print('-' * 50)
 
     plt.plot(np.arange(1, args.epochs+1), f1_acc, linewidth='1', label='f1 on dev set')
-    plt.xticks(np.arange(1, args.epochs+1, 1))
     plt.xlabel('epochs')
     plt.ylabel('f1 on dev set over epochs')
     plt.legend()
