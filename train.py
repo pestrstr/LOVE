@@ -101,7 +101,11 @@ def main():
             oririn_repre = oririn_repre.cuda()
             aug_repre_ids = aug_repre_ids.cuda()
             mask = mask.cuda()
-            aug_embeddings = model(aug_repre_ids, mask, return_dict=False)
+
+            if args.bert == True:
+                aug_embeddings = model(aug_repre_ids, mask)[0]
+            else:
+                aug_embeddings = model(aug_repre_ids, mask)
             
             # calculate loss
             loss = criterion(oririn_repre, aug_embeddings)
