@@ -6,6 +6,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
 import time
+import matplotlib.pyplot as plt
 import argparse
 
 
@@ -334,6 +335,12 @@ def run_sst2(
 
     model = CNN(word_num, args.word_embed_dim, args.cnn_filter_num, args.cnn_kernel_size, args.dropout, pre_embedding=pre_embeddings)
 
+    # Accumulators
+    train_loss_acc = []
+    train_acc_acc = []
+    valid_loss_acc = []
+    valid_acc_acc = []
+
     criterion = nn.BCEWithLogitsLoss()
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
@@ -348,6 +355,11 @@ def run_sst2(
 
         epoch_mins, epoch_secs = epoch_time(start_time, end_time)
 
+        train_loss_acc.append(train_loss)
+        train_acc_acc.append(train_acc)
+        valid_loss_acc.append(valid_loss)
+        valid_acc_acc.append(valid_acc)
+
         if valid_acc > best_valid_acc:
             best_valid_acc = valid_acc
             torch.save(model.state_dict(), args.model_path)
@@ -355,6 +367,24 @@ def run_sst2(
         print(f'Epoch: {e + 1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
         print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc * 100:.2f}%')
         print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc * 100:.2f}%')
+
+    plt.plot(np.arange(1, args.epochs+1), train_loss_acc, linewidth='1', label='train loss')
+    plt.plot(np.arange(1, args.epochs+1), valid_loss_acc, linewidth='1', label='valid loss')
+    plt.xticks(np.arange(1, args.epochs+1, 1))
+    plt.xlabel('epochs')
+    plt.ylabel('train loss vs. valid loss over epochs')
+    plt.legend()
+    plt.savefig('output/loss.pdf', bbox_inches='tight')
+    plt.close()
+
+    plt.plot(np.arange(1, args.epochs+1), train_acc_acc, linewidth='1', label='train accuracy')
+    plt.plot(np.arange(1, args.epochs+1), valid_acc_acc, linewidth='1', label='valid accuracy')
+    plt.xticks(np.arange(1, args.epochs+1, 1))
+    plt.xlabel('epochs')
+    plt.ylabel('train acc. vs. valid acc. over epochs')
+    plt.legend()
+    plt.savefig('output/accuracy.pdf', bbox_inches='tight')
+    plt.close()
 
     model.load_state_dict(torch.load(args.model_path))
     acc = predict(args, model, test_iterator, criterion)
