@@ -103,7 +103,7 @@ def main():
             mask = mask.cuda()
 
             if args.bert == True:
-                aug_embeddings = model(aug_repre_ids, mask)[0]
+                aug_embeddings = model(aug_repre_ids)[0]
                 print(oririn_repre.shape)
                 print(aug_embeddings.shape)
             else:
