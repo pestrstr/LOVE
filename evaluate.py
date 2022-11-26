@@ -13,7 +13,7 @@ def produce(args, model_path, tokenizer, batch_size=32, vocab_path='data/word_si
     dataset = TextData(dataset)
     train_iterator = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=False, collate_fn=lambda x: collate_fn_predict(x, tokenizer, args.input_type))
     model = Producer[args.model_type](args)
-    model.load_state_dict(torch.load(model_path))
+    model.load_state_dict(torch.load(model_path)['model'])
     total_num = sum(p.numel() for p in model.parameters())
     print('in total, LOVE has {a} parameters'.format(a=total_num))
     model.eval()

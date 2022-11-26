@@ -4,6 +4,7 @@ import sys
 import os
 import argparse
 import tokenization
+from tqdm import tqdm
 from torch.optim import lr_scheduler
 from loss import registry as loss_f
 from loader import registry as loader
@@ -63,24 +64,24 @@ def main():
 
     max_acc = 0
 
-    start_epoch = 6
-    ##
+    start_epoch = 0
+    
+    # Load from checkpoint
     if args.checkpoint:
         print('Loading from checkpoint...')
         checkpoint = torch.load(args.checkpoint)
-        model.load_state_dict(checkpoint['model'])  ## Load from checkpoint
-        ## From next time, this time this cannot work
-        # optimizer.load_state_dict(checkpoint['model']) 
-        # scheduler.load_state(checkpoint['scheduler'])
-        # max_acc = checkpoint['max_acc']
-        # start_epoch = checkpoint['epoch']
-        #print(f'Loss for epoch {start_epoch}: {checkpoint["epoch_loss"]:.3f}')
-    ##
-    for e in range(start_epoch, args.epochs): ## Change here next time
+        model.load_state_dict(checkpoint['model'])
+        optimizer.load_state_dict(checkpoint['optimizer']) 
+        scheduler.load_state_dict(checkpoint['scheduler'])
+        max_acc = checkpoint['max_acc']
+        start_epoch = checkpoint['epoch']
+        print(f'Loss for epoch {start_epoch}: {checkpoint["epoch_loss"]:.3f}')
+    
+    for e in range(start_epoch, args.epochs):
         epoch_loss = 0
         batch_num = 0
 
-        for words, oririn_repre, aug_repre_ids, mask in train_iterator:
+        for words, oririn_repre, aug_repre_ids, mask in tqdm(train_iterator):
             model.train()
             optimizer.zero_grad()
             batch_num += 1
