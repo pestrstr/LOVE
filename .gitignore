@@ -131,6 +131,3 @@ dmypy.json
 
 # dataset
 data/crawl-300d-2M.vec
-
-# output
-model_*.pt
