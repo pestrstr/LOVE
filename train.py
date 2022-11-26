@@ -35,7 +35,7 @@ parser.add_argument('-hard_neg_numbers', help='the number of hard negatives in e
 parser.add_argument('-hard_neg_path', help='the file path of hard negative samples ', type=str, default='data/hard_neg_samples.txt')
 parser.add_argument('-vocab_size', help='the size of the vocabulart', type=int, default=0)
 parser.add_argument('-checkpoint', help='path of the checkpoint', type=str, default=None)
-parser.add_argument('-bert', help='for fine-tuning bert model', type='bool', default=False)
+parser.add_argument('-bert', help='for fine-tuning bert model', type=bool, default=False)
 parser.add_argument('-bert_type', help='wheter the bert model is cased or uncased (default)', type=str, default="bert-base-uncased")
 
 
