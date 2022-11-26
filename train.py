@@ -10,7 +10,7 @@ from loss import registry as loss_f
 from loader import registry as loader
 from model import registry as Producer
 from evaluate import overall
-
+from transformers import BertTokenizer, BertModel
 
 #hyper-parameters
 parser = argparse.ArgumentParser(description='contrastive learning framework for word vector')
@@ -35,6 +35,8 @@ parser.add_argument('-hard_neg_numbers', help='the number of hard negatives in e
 parser.add_argument('-hard_neg_path', help='the file path of hard negative samples ', type=str, default='data/hard_neg_samples.txt')
 parser.add_argument('-vocab_size', help='the size of the vocabulart', type=int, default=0)
 parser.add_argument('-checkpoint', help='path of the checkpoint', type=str, default=None)
+parser.add_argument('-bert', help='for fine-tuning bert model', type='bool', default=False)
+parser.add_argument('-bert_type', help='wheter the bert model is cased or uncased (default)', type=str, default="bert-base-uncased")
 
 
 try:
@@ -45,14 +47,19 @@ except:
 
 
 def main():
-    TOKENIZER = tokenization.FullTokenizer(vocab_file=args.vocab_path, do_lower_case=args.lowercase)
+    if args.bert == True:
+        TOKENIZER = BertTokenizer.from_pretrained(args.bert_type)
+        model = BertModel.from_pretrained(args.bert_type)
+    else:
+        TOKENIZER = tokenization.FullTokenizer(vocab_file=args.vocab_path, do_lower_case=args.lowercase)
+        model = Producer[args.model_type](args)
+
     vocab_size = len(TOKENIZER.vocab)
     args.vocab_size = vocab_size
 
     data_loader = loader[args.loader_type](args, TOKENIZER)
     train_iterator = data_loader(data_path=args.dataset)
 
-    model = Producer[args.model_type](args)
     trainable_num = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"Number of trainable parameters: {trainable_num}")
     model.cuda()
