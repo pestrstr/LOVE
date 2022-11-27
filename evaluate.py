@@ -166,7 +166,7 @@ def overall(args, model_path, tokenizer):
 if __name__ == '__main__':
     import os
     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-    TOKENIZER = tokenization.FullTokenizer(vocab_file='data/vocab.txt', do_lower_case=True)
+    TOKENIZER = tokenization.FullTokenizer(vocab_file='data/wordpiece.txt', do_lower_case=True)
     vocab_size = len(TOKENIZER.vocab)
     from train import args
     args.vocab_size = vocab_size

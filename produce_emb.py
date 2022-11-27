@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from utils import TextData, collate_fn_predict
 
 from train import args
-TOKENIZER = tokenization.FullTokenizer(vocab_file='data/vocab.txt', do_lower_case=args.lowercase)
+TOKENIZER = tokenization.FullTokenizer(vocab_file='data/wordpiece.txt', do_lower_case=args.lowercase)
 vocab_size = len(TOKENIZER.vocab)
 args.vocab_size = vocab_size
 model_path = 'output/love_bert_base_uncased.pt'
