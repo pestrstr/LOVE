@@ -131,3 +131,4 @@ dmypy.json
 
 # dataset
 data/crawl-300d-2M.vec
+.DS_Store
