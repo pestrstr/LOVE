@@ -104,6 +104,7 @@ def single_run(args, word_vocab, pretrain_word_embedding):
     best_f1 = -1
     early_stop = 0
     f1_acc = []
+    curr_epoch = 0
 
     for epoch in range(args.epochs):
         epoch_begin = time.time()
@@ -114,7 +115,8 @@ def single_run(args, word_vocab, pretrain_word_embedding):
         print('f1 is {} at {}th epoch on dev set'.format(new_f1, epoch + 1))
         
         f1_acc.append(new_f1)
-        
+        curr_epoch+=1
+
         if new_f1 > best_f1:
             best_f1 = new_f1
             print('new best f1 on dev set:', best_f1)
@@ -143,11 +145,11 @@ def single_run(args, word_vocab, pretrain_word_embedding):
     print('train total cost {}h {}m {}s'.format(hour, min, second))
     print('-' * 50)
 
-    plt.plot(np.arange(1, args.epochs+1), f1_acc, linewidth='1', label='f1 on dev set')
+    plt.plot(np.arange(1, curr_epoch+1), f1_acc, linewidth='1', label='f1 on dev set')
     plt.xlabel('epochs')
     plt.ylabel('f1 on dev set over epochs')
     plt.legend()
-    plt.savefig('output/f1_measure.pdf', bbox_inches='tight')
+    plt.savefig('output/f1_measure_love_fasttext.pdf', bbox_inches='tight')
     plt.close()
 
     print("Now evaluating the best model...")
@@ -163,7 +165,7 @@ if __name__ == '__main__':
     with open('output/words.txt', 'w', encoding='utf8')as f:
         f.write('\n'.join([str.lower(w) for w in word_vocab._id_to_word]))
 
-    args.pretrain_embed_path = 'output/love.emb'
+    args.pretrain_embed_path = 'output/love_fasttext.emb'
     args.word_embed_dim = 300
 
     pretrain_word_embedding = build_pretrain_embedding(args.pretrain_embed_path, word_vocab, args.word_embed_dim)

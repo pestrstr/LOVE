@@ -8,7 +8,7 @@ from train import args
 TOKENIZER = tokenization.FullTokenizer(vocab_file='data/vocab.txt', do_lower_case=args.lowercase)
 vocab_size = len(TOKENIZER.vocab)
 args.vocab_size = vocab_size
-model_path = 'output/model_20.pt'
+model_path = 'output/love_fasttext.pt'
 
 
 def produce(word, batch_size=1):
@@ -16,7 +16,7 @@ def produce(word, batch_size=1):
     dataset = TextData(dataset)
     train_iterator = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=False, collate_fn=lambda x: collate_fn_predict(x, TOKENIZER, args.input_type))
     model = Producer[args.model_type](args)
-    model.load_state_dict(torch.load(model_path)['model'])
+    model.load_state_dict(torch.load(model_path))
     model.eval()
     model.cuda()
 
@@ -37,7 +37,7 @@ def gen_embeddings_for_vocab(vocab_path, emb_path, batch_size=32):
     train_iterator = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=False,
                                 collate_fn=lambda x: collate_fn_predict(x, TOKENIZER, args.input_type))
     model = Producer[args.model_type](args)
-    model.load_state_dict(torch.load(model_path)['model'])
+    model.load_state_dict(torch.load(model_path))
     model.eval()
     model.cuda()
 
