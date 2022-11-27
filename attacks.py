@@ -77,6 +77,13 @@ def get_random_attack(word, probs=[0.07, 0.07, 0.07, 0.07, 0.36, 0.36]):
             return word
     return word
 
+def get_random_post_ocr_error(word, p=[0.5, 0.5]):
+    attack = np.random.choice(["no_error", "error"], 1, p=p)[0]
+    if attack == "no_error":
+        return ocr_aug(word)
+    else:
+        return word
 
 if __name__ == '__main__':
-    pass
+    # Testing
+    print(get_random_post_ocr_error("test"))

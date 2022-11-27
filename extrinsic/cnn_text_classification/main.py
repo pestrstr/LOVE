@@ -406,6 +406,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     fixed_seed(seed=args.seed)
 
-    args.pretrain_embed_path = 'output/love_fasttext.emb'
-    args.word_embed_dim = 300
+    args.pretrain_embed_path = 'output/love_bert.emb'
+    args.word_embed_dim = 768
     run_sst2(args)

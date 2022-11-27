@@ -8,7 +8,7 @@ from train import args
 TOKENIZER = tokenization.FullTokenizer(vocab_file='data/vocab.txt', do_lower_case=args.lowercase)
 vocab_size = len(TOKENIZER.vocab)
 args.vocab_size = vocab_size
-model_path = 'output/love_fasttext.pt'
+model_path = 'output/love_bert_base_uncased.pt'
 
 
 def produce(word, batch_size=1):

@@ -4,7 +4,7 @@ import torch
 import random
 from torch.utils.data import DataLoader
 from utils import load_dataset, TextData, repre_word, load_neg_samples
-from attacks import get_random_attack
+from attacks import get_random_attack, get_random_post_ocr_error
 registry = {}
 register = partial(register, registry=registry)
 
@@ -55,13 +55,17 @@ class SimpleLoader():
         self.input_type = args.input_type
         self.lowercase = args.lowercase
         self.tokenizer = TOKENIZER
+        self.ocr = args.ocr
 
     def collate_fn(self, batch_data, pad=0):
         batch_words, batch_oririn_repre = list(zip(*batch_data))
 
         aug_words, aug_repre, aug_ids = list(), list(), list()
         for index in range(len(batch_words)):
-            aug_word = get_random_attack(batch_words[index])
+            if self.ocr is None:
+                aug_word = get_random_attack(batch_words[index])
+            else:
+                aug_word = get_random_post_ocr_error(batch_words[index], self.ocr)
             repre, repre_ids = repre_word(aug_word,  self.tokenizer, rtype=self.input_type)
             aug_words.append(aug_word)
             aug_repre.append(repre)
@@ -125,7 +129,10 @@ class SimpleLoader():
 
         aug_words, aug_repre, aug_ids = list(), list(), list()
         for index in range(len(batch_words_with_hards)):
-            aug_word = get_random_attack(batch_words_with_hards[index])
+            if self.ocr is None:
+                aug_word = get_random_attack(batch_words_with_hards[index])
+            else:
+                aug_word = get_random_post_ocr_error(batch_words_with_hards[index], self.ocr)
             repre, repre_ids = repre_word(aug_word, self.tokenizer, id_mapping=None, rtype=self.input_type)
             aug_words.append(aug_word)
             aug_repre.append(repre)
