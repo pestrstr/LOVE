@@ -149,7 +149,7 @@ def single_run(args, word_vocab, pretrain_word_embedding):
     plt.xlabel('epochs')
     plt.ylabel('f1 on dev set over epochs')
     plt.legend()
-    plt.savefig('output/f1_measure_love_fasttext.pdf', bbox_inches='tight')
+    plt.savefig('output/f1_measure_love_bert.pdf', bbox_inches='tight')
     plt.close()
 
     print("Now evaluating the best model...")
