@@ -374,7 +374,7 @@ def run_sst2(
     plt.xlabel('epochs')
     plt.ylabel('train loss vs. valid loss over epochs')
     plt.legend()
-    plt.savefig('output/loss_love_fasttext.pdf', bbox_inches='tight')
+    plt.savefig('output/loss_love_bert.pdf', bbox_inches='tight')
     plt.close()
 
     plt.plot(np.arange(1, args.epochs+1), train_acc_acc, linewidth='1', label='train accuracy')
@@ -383,7 +383,7 @@ def run_sst2(
     plt.xlabel('epochs')
     plt.ylabel('train acc. vs. valid acc. over epochs')
     plt.legend()
-    plt.savefig('output/accuracy_love_fasttext.pdf', bbox_inches='tight')
+    plt.savefig('output/accuracy_love_bert.pdf', bbox_inches='tight')
     plt.close()
 
     model.load_state_dict(torch.load(args.model_path))

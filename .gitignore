@@ -132,3 +132,7 @@ dmypy.json
 # dataset
 data/crawl-300d-2M.vec
 .DS_Store
+
+# embeddings
+extrinsic/cnn_text_classification/output/*.emb
+extrinsic/rnn_ner/output/*.emb
