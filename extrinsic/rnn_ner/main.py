@@ -165,8 +165,8 @@ if __name__ == '__main__':
     with open('output/words.txt', 'w', encoding='utf8')as f:
         f.write('\n'.join([str.lower(w) for w in word_vocab._id_to_word]))
 
-    args.pretrain_embed_path = 'output/love_fasttext.emb'
-    args.word_embed_dim = 300
+    args.pretrain_embed_path = 'output/love_bert.emb'
+    args.word_embed_dim = 768
 
     pretrain_word_embedding = build_pretrain_embedding(args.pretrain_embed_path, word_vocab, args.word_embed_dim)
     single_run(args, word_vocab, pretrain_word_embedding)
