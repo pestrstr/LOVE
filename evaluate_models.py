@@ -1,21 +1,21 @@
-import argparse
-import sys
-import torch
+from evaluate import overall
+from tokenization import FullTokenizer
 
-parser = argparse.ArgumentParser(description="evaluate all models in one shot")
-parser.add_argument('-epochs', help='number of epochs for which model has been trained', type=int, default=20)
-parser.add_argument('-first_time', help='models from epoch 7 should be treat differently', type=bool, default=False)
+first_time = True
 
-try:
-    args = parser.parse_args()
-except:
-    parser.print_help()
-    sys.exit(0)
-
-def evaluate():
+def evaluate(args):
+    TOKENIZER = FullTokenizer(vocab_file='data/vocab.txt', do_lower_case=True)
+    vocab_size = len(TOKENIZER.vocab)
+    args.vocab_size = vocab_size
+    print(first_time)
     for e in range(1, args.epochs+1):
-        if args.first_time and e < 7:
-            model = torch.load(f'./output/model_{e}.pt')
+        if first_time and e < 7:
+            scores = overall(args, f'./output/model_{e}.pt', TOKENIZER, only_model=True, return_all_scores=True)
         else:
-            model = torch.load(f'./output/model_{e}.pt')['model']
-    
+            scores = overall(args, f'./output/model_{e}.pt', TOKENIZER, return_all_scores=True)
+        print(scores)
+        break
+
+if __name__ == '__main__':
+    from train import args
+    evaluate(args)
