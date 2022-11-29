@@ -10,7 +10,6 @@ from loss import registry as loss_f
 from loader import registry as loader
 from model import registry as Producer
 from evaluate import overall
-from transformers import BertTokenizer, BertModel
 
 #hyper-parameters
 parser = argparse.ArgumentParser(description='contrastive learning framework for word vector')
@@ -35,9 +34,6 @@ parser.add_argument('-hard_neg_numbers', help='the number of hard negatives in e
 parser.add_argument('-hard_neg_path', help='the file path of hard negative samples ', type=str, default='data/hard_neg_samples.txt')
 parser.add_argument('-vocab_size', help='the size of the vocabulart', type=int, default=0)
 parser.add_argument('-checkpoint', help='path of the checkpoint', type=str, default=None)
-parser.add_argument('-bert', help='for fine-tuning bert model', type=bool, default=False)
-parser.add_argument('-bert_type', help='wheter the bert model is cased or uncased (default)', type=str, default="bert-base-uncased")
-
 
 try:
     args = parser.parse_args()
@@ -50,10 +46,7 @@ def main():
 
     TOKENIZER = tokenization.FullTokenizer(vocab_file=args.vocab_path, do_lower_case=args.lowercase)
 
-    if args.bert == True:
-        model = BertModel.from_pretrained(args.bert_type)
-    else:
-        model = Producer[args.model_type](args)
+    model = Producer[args.model_type](args)
 
     vocab_size = len(TOKENIZER.vocab)
     args.vocab_size = vocab_size
@@ -101,13 +94,8 @@ def main():
             oririn_repre = oririn_repre.cuda()
             aug_repre_ids = aug_repre_ids.cuda()
             mask = mask.cuda()
-
-            if args.bert == True:
-                aug_embeddings = model(aug_repre_ids)[0]
-                print(oririn_repre.shape)
-                print(aug_embeddings.shape)
-            else:
-                aug_embeddings = model(aug_repre_ids, mask)
+            
+            aug_embeddings = model(aug_repre_ids, mask)
             
             # calculate loss
             loss = criterion(oririn_repre, aug_embeddings)
