@@ -42,6 +42,7 @@ def main():
     elif reproduce_args.eval_all:
         eval_all()
         
-
+if __name__ == '__main__':
+    main()
 
 
