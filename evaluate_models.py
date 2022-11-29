@@ -3,6 +3,18 @@ from tokenization import FullTokenizer
 import matplotlib.pyplot as plt
 import numpy as np
 
+message = ''' 
+IMPORTANT
+ Meaning of this flag (first_time):
+ During our first run of training, training was interrupted at epoch 7 due to a crash
+ of our VM in Google Cloud Platform. To avoid repeating training from scratch, 
+ we started the training from epoch 7 again. Until that epoch, we were saving only
+ the dict of our model. After, we decided to also save the optimizer and other parameters,
+ to allow for restarting the training from any checkpoint.
+ That means that if you've trained your model from scratch and for 20 epochs,
+ you must set first_time = False to make this code running.
+ - Giuseppe Stracquadanio and Giuseppe Concialdi.
+ '''
 first_time = True
 
 def evaluate(args):
@@ -53,8 +65,7 @@ def evaluate(args):
     plt.close()
 
 
-
-
 if __name__ == '__main__':
+    print(message)
     from train import args
     evaluate(args)

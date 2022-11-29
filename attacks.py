@@ -86,4 +86,4 @@ def get_random_post_ocr_error(word, p=[0.5, 0.5]):
 
 if __name__ == '__main__':
     # Testing
-    print(get_random_post_ocr_error("test"))
+    print(get_random_post_ocr_error("testtesttest"))

@@ -7,7 +7,6 @@ from torch.utils.data import Dataset
 # VOCAB = 'data/vocab.txt'
 # TOKENIZE = tokenization.FullTokenizer(vocab_file=VOCAB, do_lower_case=True)
 
-
 def load_dataset(path, DIM=300, lower=True, loader_type='simple'):
 
     # loader_type: 'simple'/'aug'/'hard'
