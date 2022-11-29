@@ -8,10 +8,10 @@ Authors: Giuseppe Stracquadanio & Giuseppe Concialdi.
 '''
 
 reproduce_parser = argparse.ArgumentParser(description=description)
-reproduce_parser.add_argument('--train', help='train LOVE model', action=argparse.BooleanOptionalAction)
-reproduce_parser.add_argument('--eval', help='evaluate LOVE model', action=argparse.BooleanOptionalAction)
+reproduce_parser.add_argument('--train', help='train LOVE model', action='store_true')
+reproduce_parser.add_argument('--eval', help='evaluate LOVE model', action='store_true')
 reproduce_parser.add_argument('--model_path', help='specify LOVE model path for eval', type=str, default='./output/model_20.pt')
-reproduce_parser.add_argument('--eval_all', help='evalaute LOVE models (all epochs) in one shot. requires complete training', action=argparse.BooleanOptionalAction)
+reproduce_parser.add_argument('--eval_all', help='evalaute LOVE models (all epochs) in one shot. requires complete training', action='store_true')
 
 try:
     reproduce_args = reproduce_parser.parse_args()
