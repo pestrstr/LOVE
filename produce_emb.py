@@ -56,10 +56,24 @@ def gen_embeddings_for_vocab(vocab_path, emb_path, batch_size=32, model_path='ou
 
 if __name__ == '__main__':
     import os
+    import sys
+    import argparse
+
     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    produce_parser = argparse.ArgumentParser(description='parser for produce_emb')
+    produce_parser.add_argument('--vocab_path', help='path of vocabulary', type=str, default='data/vocab.txt')
+    produce_parser.add_argument('--emb_path', help='path for embeddings', type=str, default='extrinsic/rnn_ner/output/love.emb')
+    produce_parser.add_argument('--model_path', help='path for model', type=str, default='output/model_20.pt')
     #gen_embeddings_for_vocab(vocab_path='extrinsic/rnn_ner/output/words.txt', emb_path='extrinsic/rnn_ner/output/love.emb')
     # gen_embeddings_for_vocab(vocab_path='extrinsic/cnn_text_classification/output/words.txt',
     #                          emb_path='extrinsic/cnn_text_classification/output/love.emb')
-    emb = produce('mispelling')
-    print(emb)
+    try:
+        produce_args = produce_parser.parse_args()
+    except:
+        produce_parser.print_help()
+        sys.exit(0)
+
+    gen_embeddings_for_vocab(vocab_path=produce_args.vocab_path, 
+                        emb_path=produce_args.emb_path, 
+                        model_path=produce_args.model_path)
 

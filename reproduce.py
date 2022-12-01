@@ -3,9 +3,13 @@ import sys
 import tokenization
 import subprocess
 import os
+import json
 
 description =  ''' Reproducing Code for CS421 Reproducibility Challenge.
 Authors: Giuseppe Stracquadanio & Giuseppe Concialdi.
+
+Note: Paths for evaluating LOVE on extrinsic tasks must be relative 
+    to their respective folders extrinsic/[rnn_ner, cnn_text_classification]
 '''
 
 ## Example ## Note how the pretrain_embed_path is relative to rnn_ner folder.
@@ -33,12 +37,13 @@ def main():
     reproduce_parser = argparse.ArgumentParser(description=description)
     reproduce_parser.add_argument('--train', help='train LOVE model', action='store_true')
     reproduce_parser.add_argument('--eval', help='evaluate LOVE model', action='store_true')
-    reproduce_parser.add_argument('--model_path', help='specify LOVE model path for eval', type=str, default='./output/model_20.pt')
+    reproduce_parser.add_argument('--model_path', help='specify LOVE model path for eval', type=str, default='output/model_20.pt')
     reproduce_parser.add_argument('--eval_all', help='evalaute LOVE models (all epochs) in one shot. requires complete training', action='store_true')
-    reproduce_parser.add_argument('--gen_embedding', help='generate embeddings, given vocab', action='store_true')
-    reproduce_parser.add_argument('--vocab_path', help='vocab path. requires --gen_embedding', type=str, default='data/vocab.txt')
-    reproduce_parser.add_argument('--emb_path', help='emb path. requires --gen_embedding', type=str, default='extrinsic/rnn_ner/output/words.txt')
-    reproduce_parser.add_argument('--model_path_extrinsic', help='model path. requires --gen_embedding', type=str, default='output/model_20.pt')
+    reproduce_parser.add_argument('--gen_embeddings_sst2', help='generate embeddings for SST2', action='store_true')
+    reproduce_parser.add_argument('--gen_embeddings_conll03', help='generate embeddings for CoNLL-03', action='store_true')
+    reproduce_parser.add_argument('--vocab_path', help='vocab path. requires --gen_embedding', type=str, default='output/words.txt')
+    reproduce_parser.add_argument('--emb_path', help='emb path. requires --gen_embedding', type=str, default='output/love.emb')
+    reproduce_parser.add_argument('--model_path_extrinsic', help='model path. requires --gen_embedding', type=str, default='output/model.pt')
     reproduce_parser.add_argument('--text_classification', help='train CNN model for text classification', action='store_true')
     reproduce_parser.add_argument('--ner', help='train Bi-LSTM-CRF model for name entity recognition', action='store_true')
     reproduce_parser.add_argument('--pretrain_embed_path', help='pretrain embed path for ner or text classif. (relative to cnn or rnn folder)', type=str, default='extrinsic/rnn_ner/output/love.emb')
@@ -59,11 +64,36 @@ def main():
     elif reproduce_args.eval_all:
         eval_all()
 
-    elif reproduce_args.gen_embedding:
-        from produce_emb import gen_embeddings_for_vocab
-        gen_embeddings_for_vocab(vocab_path = reproduce_args.vocab_path, 
-                                emb_path = reproduce_args.emb_path,  
-                                model_path = reproduce_args.model_path) 
+    elif reproduce_args.gen_embeddings_conll03:
+        # Read & Write for corresponding json config file
+        with open('emb_config.json', 'r') as config:
+            emb_params = json.loads(config.read())
+
+        conll03_params = emb_params['rnn_ner']
+        conll03_params['vocab_path'] = 'extrinsic/rnn_ner/' + reproduce_args.vocab_path
+        conll03_params['model_path'] = 'extrinsic/rnn_ner/' + reproduce_args.model_path_extrinsic
+        conll03_params['emb_path'] = 'extrinsic/rnn_ner/' + reproduce_args.emb_path
+
+        with open('emb_config.json', 'w') as config:
+            json.dump(obj=emb_params, fp=config)
+
+        program_path = 'gen_emb_conll.py'
+        subprocess.run(['python', program_path])
+
+    elif reproduce_args.gen_embeddings_sst2:
+        with open('emb_config.json', 'r') as config:
+            emb_params = json.loads(config.read())
+
+        sst2_params = emb_params['cnn_text_classification']
+        sst2_params['vocab_path'] = 'extrinsic/cnn_text_classification/' + reproduce_args.vocab_path
+        sst2_params['model_path'] = 'extrinsic/cnn_text_classification/' + reproduce_args.model_path_extrinsic
+        sst2_params['emb_path'] = 'extrinsic/cnn_text_classification/' + reproduce_args.emb_path
+
+        with open('emb_config.json', 'w') as config:
+            json.dump(obj=emb_params, fp=config)
+
+        program_path = 'gen_emb_sst2.py'
+        subprocess.run(['python', program_path])
 
     elif reproduce_args.text_classification:
         program_path = 'main.py'

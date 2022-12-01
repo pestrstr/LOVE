@@ -46,14 +46,20 @@ except:
 def main():
 
     TOKENIZER = tokenization.FullTokenizer(vocab_file=args.vocab_path, do_lower_case=args.lowercase)
-
-    model = Producer[args.model_type](args)
-
+    
     vocab_size = len(TOKENIZER.vocab)
     args.vocab_size = vocab_size
 
+    model = Producer[args.model_type](args)
+
+    print(args.vocab_size)
+
     data_loader = loader[args.loader_type](args, TOKENIZER)
     train_iterator = data_loader(data_path=args.dataset)
+
+    for p in model.parameters():
+        if p.requires_grad:
+            print(p.numel())
 
     trainable_num = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"Number of trainable parameters: {trainable_num}")
