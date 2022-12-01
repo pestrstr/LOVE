@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from utils import TextData, collate_fn_predict
 
 from train import args
-TOKENIZER = tokenization.FullTokenizer(vocab_file='data/wordpiece.txt', do_lower_case=args.lowercase)
+TOKENIZER = tokenization.FullTokenizer(vocab_file='data/vocab.txt', do_lower_case=args.lowercase)
 vocab_size = len(TOKENIZER.vocab)
 args.vocab_size = vocab_size
 
@@ -14,7 +14,11 @@ def produce(word, batch_size=1, model_path='output/love_bert_base_uncased.pt'):
     dataset = TextData(dataset)
     train_iterator = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=False, collate_fn=lambda x: collate_fn_predict(x, TOKENIZER, args.input_type))
     model = Producer[args.model_type](args)
-    model.load_state_dict(torch.load(model_path))
+    model_dict = torch.load(model_path)
+    if model_dict.get('model') is None:
+        model.load_state_dict(model_dict)
+    else:
+        model.load_state_dict(model_dict['model'])
     model.eval()
     model.cuda()
 
@@ -35,7 +39,11 @@ def gen_embeddings_for_vocab(vocab_path, emb_path, batch_size=32, model_path='ou
     train_iterator = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=False,
                                 collate_fn=lambda x: collate_fn_predict(x, TOKENIZER, args.input_type))
     model = Producer[args.model_type](args)
-    model.load_state_dict(torch.load(model_path))
+    model_dict = torch.load(model_path)
+    if model_dict.get('model') is None:
+        model.load_state_dict(model_dict)
+    else:
+        model.load_state_dict(model_dict['model'])
     model.eval()
     model.cuda()
 

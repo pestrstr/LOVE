@@ -43,7 +43,6 @@ def main():
     reproduce_parser.add_argument('--gen_embeddings_conll03', help='generate embeddings for CoNLL-03', action='store_true')
     reproduce_parser.add_argument('--vocab_path', help='vocab path. requires --gen_embedding', type=str, default='output/words.txt')
     reproduce_parser.add_argument('--emb_path', help='emb path. requires --gen_embedding', type=str, default='output/love.emb')
-    reproduce_parser.add_argument('--model_path_extrinsic', help='model path. requires --gen_embedding', type=str, default='output/model.pt')
     reproduce_parser.add_argument('--text_classification', help='train CNN model for text classification', action='store_true')
     reproduce_parser.add_argument('--ner', help='train Bi-LSTM-CRF model for name entity recognition', action='store_true')
     reproduce_parser.add_argument('--pretrain_embed_path', help='pretrain embed path for ner or text classif. (relative to cnn or rnn folder)', type=str, default='extrinsic/rnn_ner/output/love.emb')
@@ -71,7 +70,7 @@ def main():
 
         conll03_params = emb_params['rnn_ner']
         conll03_params['vocab_path'] = 'extrinsic/rnn_ner/' + reproduce_args.vocab_path
-        conll03_params['model_path'] = 'extrinsic/rnn_ner/' + reproduce_args.model_path_extrinsic
+        conll03_params['model_path'] = reproduce_args.model_path
         conll03_params['emb_path'] = 'extrinsic/rnn_ner/' + reproduce_args.emb_path
 
         with open('emb_config.json', 'w') as config:
@@ -86,7 +85,7 @@ def main():
 
         sst2_params = emb_params['cnn_text_classification']
         sst2_params['vocab_path'] = 'extrinsic/cnn_text_classification/' + reproduce_args.vocab_path
-        sst2_params['model_path'] = 'extrinsic/cnn_text_classification/' + reproduce_args.model_path_extrinsic
+        sst2_params['model_path'] = reproduce_args.model_path
         sst2_params['emb_path'] = 'extrinsic/cnn_text_classification/' + reproduce_args.emb_path
 
         with open('emb_config.json', 'w') as config:
