@@ -8,10 +8,8 @@ from train import args
 TOKENIZER = tokenization.FullTokenizer(vocab_file='data/wordpiece.txt', do_lower_case=args.lowercase)
 vocab_size = len(TOKENIZER.vocab)
 args.vocab_size = vocab_size
-model_path = 'output/love_bert_base_uncased.pt'
 
-
-def produce(word, batch_size=1):
+def produce(word, batch_size=1, model_path='output/love_bert_base_uncased.pt'):
     dataset = {'origin_word': [word], 'origin_repre':[None]}
     dataset = TextData(dataset)
     train_iterator = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=False, collate_fn=lambda x: collate_fn_predict(x, TOKENIZER, args.input_type))
@@ -30,7 +28,7 @@ def produce(word, batch_size=1):
     return embeddings
 
 
-def gen_embeddings_for_vocab(vocab_path, emb_path, batch_size=32):
+def gen_embeddings_for_vocab(vocab_path, emb_path, batch_size=32, model_path='output/love_bert_base_uncased.pt'):
     vocab = [line.strip() for line in open(vocab_path, encoding='utf8')]
     dataset = {'origin_word': vocab, 'origin_repre': [None for _ in range(len(vocab))]}
     dataset = TextData(dataset)

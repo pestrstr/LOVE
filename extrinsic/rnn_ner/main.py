@@ -24,12 +24,12 @@ np.random.seed(seed_num)
 
 
 parser = argparse.ArgumentParser(description='Named Entity Recognition Model')
-parser.add_argument('--word_embed_dim', type=int, default=300)
+parser.add_argument('--word_embed_dim', type=int, default=768)
 parser.add_argument('--word_hidden_dim', type=int, default=100)
 parser.add_argument('--char_embedding_dim', type=int, default=30)
 parser.add_argument('--char_hidden_dim', type=int, default=50)
 parser.add_argument('--dropout', type=float, default=0.5)
-parser.add_argument('--pretrain_embed_path', default='glove.6B.100d.txt')
+parser.add_argument('--pretrain_embed_path', default='output/love_bert.emb')
 parser.add_argument('--savedir', default='output/')
 parser.add_argument('--batch_size', type=int, default=768)
 parser.add_argument('--epochs', type=int, default=100)
@@ -164,9 +164,6 @@ if __name__ == '__main__':
     word_vocab = WordVocabulary(args.train_path, args.dev_path, args.test_path, args.number_normalized)
     with open('output/words.txt', 'w', encoding='utf8')as f:
         f.write('\n'.join([str.lower(w) for w in word_vocab._id_to_word]))
-
-    args.pretrain_embed_path = 'output/love_bert.emb'
-    args.word_embed_dim = 768
 
     pretrain_word_embedding = build_pretrain_embedding(args.pretrain_embed_path, word_vocab, args.word_embed_dim)
     single_run(args, word_vocab, pretrain_word_embedding)
