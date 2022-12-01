@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+import time
 from scipy import stats
 import math
 import tokenization
@@ -155,6 +156,7 @@ def overall(args, model_path, tokenizer, only_model = False, return_all_scores =
     ]
 
     all_score = list()
+    start = time.time()
     embeddings = produce(args, model_path=model_path, tokenizer=tokenizer, only_model=only_model)
     for data in data_list:
         score, drop_rate = cal_spear(data_file=data['file'], vectors=embeddings, index1=data['index1'],
@@ -164,6 +166,8 @@ def overall(args, model_path, tokenizer, only_model = False, return_all_scores =
             "[{0:5s}]: [plugin], {1} "
                 .format(data['task'], score)
         )
+    end = time.time()
+    print('Time needed for evaluation: {a}'.format(a=end-start))
     if return_all_scores == True:
         return all_score
     else:

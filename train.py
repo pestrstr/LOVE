@@ -4,6 +4,7 @@ import sys
 import os
 import argparse
 import tokenization
+import time
 from tqdm import tqdm
 from torch.optim import lr_scheduler
 from loss import registry as loss_f
@@ -81,7 +82,7 @@ def main():
     for e in range(start_epoch, args.epochs):
         epoch_loss = 0
         batch_num = 0
-
+        start = time.time()
         for words, oririn_repre, aug_repre_ids, mask in tqdm(train_iterator):
             model.train()
             optimizer.zero_grad()
@@ -103,6 +104,8 @@ def main():
             loss.backward()
             optimizer.step()
             epoch_loss += loss.item()
+        end = time.time()
+        print('Elapsed time for epoch {a}: {b}'.format(a=e, b=end-start))
         scheduler.step()
         print('[ lr rate] = {a}'.format(a=optimizer.state_dict()['param_groups'][0]['lr']))
 

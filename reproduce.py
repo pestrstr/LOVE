@@ -7,9 +7,12 @@ import os
 description =  ''' Reproducing Code for CS421 Reproducibility Challenge.
 Authors: Giuseppe Stracquadanio & Giuseppe Concialdi.
 '''
-## Example ## Note how the pretrain_embed_path is relative to rnn_ner folder
-# python reproduce.py --ner --pretrain_embed_path output/love.emb --emb_dim 300
-# python reproduce.py --text_classification --pretrain_embed_path output/love.emb --emb_dim 300
+
+## Example ## Note how the pretrain_embed_path is relative to rnn_ner folder.
+# >     python reproduce.py --ner --pretrain_embed_path output/love.emb --emb_dim 300
+# >     python reproduce.py --text_classification --pretrain_embed_path output/love.emb --emb_dim 300
+# Look at gen_emb_conll.py and gen_emb_sst2.py for a reference to generate embeddings from your model,
+# before training a CNN or a RNN model for a downstream task.
 
 def train():
     from train import main as trainLOVE
