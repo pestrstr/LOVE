@@ -21,6 +21,7 @@ Note: Paths for evaluating LOVE on extrinsic tasks must be relative
 def eval(args):
     with open('eval_config.json', 'r') as config:
         eval_params = json.loads(config.read())
+        
     eval_params['vocab_path'] = args.vocab_path
     eval_params['model_path'] = args.model_path
 
