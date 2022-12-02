@@ -3,25 +3,10 @@ from tokenization import FullTokenizer
 import matplotlib.pyplot as plt
 import numpy as np
 
-message = ''' 
-IMPORTANT
- Meaning of this flag (first_time):
- During our first run of training, training was interrupted at epoch 7 due to a crash
- of our VM in Google Cloud Platform. To avoid repeating training from scratch, 
- we started the training from epoch 7 again. Until that epoch, we were saving only
- the dict of our model. After, we decided to also save the optimizer and other parameters,
- to allow for restarting the training from any checkpoint.
- That means that if you've trained your model from scratch and for 20 epochs,
- you must set first_time = False to make this code running.
- - Giuseppe Stracquadanio and Giuseppe Concialdi.
- '''
-first_time = True
-
 def evaluate(args):
     TOKENIZER = FullTokenizer(vocab_file='data/vocab.txt', do_lower_case=True)
     vocab_size = len(TOKENIZER.vocab)
     args.vocab_size = vocab_size
-    print(first_time)
 
     RW_acc = []
     MEN_acc = []
@@ -31,10 +16,7 @@ def evaluate(args):
     muturk_acc = []
 
     for e in range(1, args.epochs+1):
-        if first_time and e < 7:
-            scores = overall(args, f'./output/model_{e}.pt', TOKENIZER, only_model=True, return_all_scores=True)
-        else:
-            scores = overall(args, f'./output/model_{e}.pt', TOKENIZER, return_all_scores=True)
+        scores = overall(args, f'./output/model_{e}.pt', TOKENIZER, return_all_scores=True)
         measure_dict = {
             "RareWord": scores[0],
             "MEN": scores[1],
@@ -66,6 +48,5 @@ def evaluate(args):
 
 
 if __name__ == '__main__':
-    print(message)
     from train import args
     evaluate(args)

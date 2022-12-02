@@ -10,16 +10,16 @@ from torch.utils.data import DataLoader
 from utils import load_predict_dataset, TextData, collate_fn_predict
 
 
-def produce(args, model_path, tokenizer, batch_size=32, vocab_path='data/word_sim/all_vocab.txt', only_model=False):
+def produce(args, model_path, tokenizer, batch_size=32, vocab_path='data/word_sim/all_vocab.txt'):
     dataset = load_predict_dataset(path=vocab_path)
     dataset = TextData(dataset)
     train_iterator = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=False, collate_fn=lambda x: collate_fn_predict(x, tokenizer, args.input_type))
     model = Producer[args.model_type](args)
-    print(only_model)
-    if only_model == True:
-        model.load_state_dict(torch.load(model_path))
+    model_dict = torch.load(model_path)
+    if model_dict.get('model') is None:
+        model.load_state_dict(model_dict)
     else:
-        model.load_state_dict(torch.load(model_path)['model'])
+        model.load_state_dict(model_dict['model'])
     total_num = sum(p.numel() for p in model.parameters())
     print('in total, LOVE has {a} parameters'.format(a=total_num))
     model.eval()
@@ -103,7 +103,7 @@ def uniform_loss(x, t=2):
     return torch.pdist(x, p=2).pow(2).mul(-t).exp().mean().log()
 
 
-def overall(args, model_path, tokenizer, only_model = False, return_all_scores = False):
+def overall(args, model_path, tokenizer, return_all_scores = False):
     data_list = [
         {
             'task':'RareWord',
@@ -158,7 +158,7 @@ def overall(args, model_path, tokenizer, only_model = False, return_all_scores =
 
     all_score = list()
     start = time.time()
-    embeddings = produce(args, model_path=model_path, tokenizer=tokenizer, only_model=only_model)
+    embeddings = produce(args, model_path=model_path, tokenizer=tokenizer)
     for data in data_list:
         score, drop_rate = cal_spear(data_file=data['file'], vectors=embeddings, index1=data['index1'],
                                      index2=data['index2'], target=data['target'], spear=data['spear'])
