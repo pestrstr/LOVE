@@ -19,8 +19,9 @@ python reproduce.py --text_classification --pretrain_embed_path output/love.emb 
 Note that you can also change default parameters that we set in the parser, if you want to use another model to generate embeddings from, or if you want to change your input vocabulary (to generate embeddings for another dataset).
 
 You can also directly evaluate your models from this script.
+When evaluating your model, rembember to specify the vocabulary path. Indeed, the default value is set to *output/words.txt* for simplifying the evaluation of extrinsic metrics.
 ```
-python reproduce.py --eval --model_path path/to/model
+python reproduce.py --eval --model_path=output/model_1.pt --vocab_path=data/vocab.txt
 ```
 or evaluate (with different metrics, see. Intrinsic Tasks section of the paper) the saved checkpoints at different epochs, resulting in a matplotlib plot for the training phase of your model.
 ```
