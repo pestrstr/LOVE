@@ -22,7 +22,7 @@ You can also directly evaluate your models from this script.
 ```
 python reproduce.py --eval --model_path path/to/model
 ```
-or directly evaluate (with different metrics, see. Intrinsic Tasks section of the paper) the saved checkpoints at different epochs, resulting in a matplotlib plot for the training phase of your model.
+or evaluate (with different metrics, see. Intrinsic Tasks section of the paper) the saved checkpoints at different epochs, resulting in a matplotlib plot for the training phase of your model.
 ```
 python reproduce.py --eval_all
 ```
