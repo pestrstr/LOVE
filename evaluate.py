@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 import time
+import json
 from scipy import stats
 import math
 import tokenization
@@ -177,9 +178,13 @@ def overall(args, model_path, tokenizer, only_model = False, return_all_scores =
 if __name__ == '__main__':
     import os
     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-    TOKENIZER = tokenization.FullTokenizer(vocab_file='data/wordpiece.txt', do_lower_case=True)
+
+    with open('eval_config.json', 'r') as config:
+        eval_params = json.loads(config.read())
+
+    TOKENIZER = tokenization.FullTokenizer(vocab_file=eval_params['vocab_path'], do_lower_case=True)
     vocab_size = len(TOKENIZER.vocab)
     from train import args
     args.vocab_size = vocab_size
     print(args)
-    overall(args, model_path='output/love_bert_base_uncased.pt', tokenizer=TOKENIZER)
+    overall(args, model_path=eval_params['model_path'], tokenizer=TOKENIZER)

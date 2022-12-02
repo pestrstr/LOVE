@@ -1,0 +1,4 @@
+{
+    "vocab_path": "data/vocab.txt",
+    "model_path": "output/model_20.pt"
+}
