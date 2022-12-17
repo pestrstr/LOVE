@@ -43,7 +43,7 @@ parser.add_argument('--test_path', default='evaluation/test.txt')
 parser.add_argument('--patience', type=int, default=5)
 parser.add_argument('--number_normalized', type=bool, default=True)
 parser.add_argument('--use_crf', type=bool, default=True)
-
+parser.add_argument('--dataset', default='CoNLL-03') # options: CoNLL-03, BC2GM
 
 def single_run(args, word_vocab, pretrain_word_embedding):
 
