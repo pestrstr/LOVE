@@ -25,7 +25,7 @@ parser.add_argument('--train_path', default='evaluation/train.tsv')
 parser.add_argument('--dev_path', default='evaluation/dev.tsv')
 parser.add_argument('--test_path', default='evaluation/test.tsv')
 parser.add_argument('--seed', type=int, default=42)
-
+parser.add_argument('--dataset', default='sst2')
 
 class CNN(nn.Module):
     def __init__(self, vocab_size, embedding_dim, n_filters, filter_sizes,
@@ -390,6 +390,75 @@ def run_sst2(
     acc = predict(args, model, test_iterator, criterion)
     return acc
 
+def run_mr(
+        args,
+):
+    word_dict, word_list = load_vocabulary(args.vocab_path)
+    word_num = len(word_list)  # len(TEXT.vocab)
+    pre_embeddings = load_all_embeddings(args.pretrain_embed_path, args.word_embed_dim)
+    print('embedding word size = {a}'.format(a=len(pre_embeddings)))
+    pre_embeddings = get_emb_weights(pre_embeddings, word_list, args.word_embed_dim)
+
+    train_data = load_sent_by_id(args.train_path, word_dict)
+    test_data = load_sent_by_id(args.test_path, word_dict)
+
+    train_data = TextData(train_data)
+    test_data = TextData(test_data)
+    train_iterator = DataLoader(dataset=train_data, batch_size=args.batch_size, shuffle=True, collate_fn=collate_fn)
+    test_iterator = DataLoader(dataset=test_data, batch_size=args.batch_size, shuffle=False, collate_fn=collate_fn)
+
+    model = CNN(word_num, args.word_embed_dim, args.cnn_filter_num, args.cnn_kernel_size, args.dropout, pre_embedding=pre_embeddings)
+
+    # Accumulators
+    train_loss_acc = []
+    train_acc_acc = []
+    valid_loss_acc = []
+    valid_acc_acc = []
+
+    criterion = nn.BCEWithLogitsLoss()
+
+    optimizer = optim.Adam(model.parameters(), lr=args.lr)
+    best_valid_acc = 0.0
+    print('epoch = {a}'.format(a=args.epochs))
+    for e in range(args.epochs):
+        start_time = time.time()
+        train_loss, train_acc = train(model, train_iterator, optimizer, criterion)
+        valid_loss, valid_acc = evaluate(model, test_iterator, criterion)
+
+        end_time = time.time()
+
+        epoch_mins, epoch_secs = epoch_time(start_time, end_time)
+
+        train_loss_acc.append(train_loss)
+        train_acc_acc.append(train_acc)
+        valid_loss_acc.append(valid_loss)
+        valid_acc_acc.append(valid_acc)
+
+        if valid_acc > best_valid_acc:
+            best_valid_acc = valid_acc
+            torch.save(model.state_dict(), args.model_path)
+
+        print(f'Epoch: {e + 1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
+        print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc * 100:.2f}%')
+        print(f'\t Test Loss: {valid_loss:.3f} |  Test Acc: {valid_acc * 100:.2f}%')
+
+    plt.plot(np.arange(1, args.epochs+1), train_loss_acc, linewidth='1', label='train loss')
+    plt.plot(np.arange(1, args.epochs+1), valid_loss_acc, linewidth='1', label='valid loss')
+    plt.xticks(np.arange(1, args.epochs+1, 1))
+    plt.xlabel('epochs')
+    plt.ylabel('train loss vs. test loss over epochs')
+    plt.legend()
+    plt.savefig('output/loss_love_bert_mr.pdf', bbox_inches='tight')
+    plt.close()
+
+    plt.plot(np.arange(1, args.epochs+1), train_acc_acc, linewidth='1', label='train accuracy')
+    plt.plot(np.arange(1, args.epochs+1), valid_acc_acc, linewidth='1', label='valid accuracy')
+    plt.xticks(np.arange(1, args.epochs+1, 1))
+    plt.xlabel('epochs')
+    plt.ylabel('train acc. vs. valid acc. over epochs')
+    plt.legend()
+    plt.savefig('output/accuracy_love_bert_mr.pdf', bbox_inches='tight')
+    plt.close()
 
 def predict(args, model, test_iterator, criterion):
     model.load_state_dict(torch.load(args.model_path))
@@ -406,4 +475,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     fixed_seed(seed=args.seed)
     
-    run_sst2(args)
+    if args.dataset == 'sst2':
+        run_sst2(args)
+    elif args.dataset == 'mr':
+        run_mr(args)
+    else:
+        print("Error! No dataset named {a}.".format(a=args.dataset))
+    

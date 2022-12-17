@@ -131,6 +131,7 @@ dmypy.json
 
 # dataset
 data/crawl-300d-2M.vec
+*.csv
 .DS_Store
 
 # embeddings
