@@ -39,7 +39,6 @@ def main():
     reproduce_parser = argparse.ArgumentParser(description=description)
     reproduce_parser.add_argument('--eval', help='evaluate LOVE model', action='store_true')
     reproduce_parser.add_argument('--model_path', help='specify LOVE model path for eval', type=str, default='output/model_20.pt')
-    reproduce_parser.add_argument('--emb_dim', help='embeddings dim (fastText:300, BERT:768)', type=int, default=300)
     reproduce_parser.add_argument('--vocab_size', help='size of vocabulary; precomputed automatically in most cases', type=int, default=0)
     reproduce_parser.add_argument('--eval_all', help='evalaute LOVE models (all epochs) in one shot. requires complete training', action='store_true')
     reproduce_parser.add_argument('--gen_embeddings_tc', help='generate embeddings for text classification', action='store_true')
