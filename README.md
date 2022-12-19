@@ -13,10 +13,24 @@ python reproduce.py -h
 For example, you might want to generate embeddings for the all the words in the SST2 dataset and then train a CNN for a Text Classification Task on the SST2 dataset, to work on top of your LOVE model, like it was proposed by the authors.
 To do that, you can simply type:
 ```
-python reproduce.py --gen_embeddings_sst2
-python reproduce.py --text_classification --pretrain_embed_path output/love.emb --emb_dim 300
+python reproduce.py --gen_embeddings_tc
+python reproduce.py --text_classification --dataset SST2 --pretrain_embed_path output/love.emb --emb_dim 300
 ```
-Note that you can also change default parameters that we set in the parser, if you want to use another model to generate embeddings from, or if you want to change your input vocabulary (to generate embeddings for another dataset).
+You can also do the same exact thing for evaluating your model on the MR (Movie Review) dataset. If you have already generated embeddings for the SST2 dataset, you can skip the first part, as we will use the same vocabulary for evaluating the LOVE model on both datasets.
+
+```
+python reproduce.py --gen_embeddings_tc
+python reproduce.py --text_classification --dataset MR --pretrain_embed_path output/love.emb --emb_dim 300
+```
+
+To reproduce NER results on *CoNLL-03* and *BC2GM* datasets, run the following command:
+```
+python reproduce.py --gen_embeddings_ner
+python reproduce.py --ner --dataset DATASET_NAME --pretrain_embed_path output/love.emb --emb_dim 300
+```
+where *DATASET_NAME* is equal to *CoNLL-03* or *BC2GM*. 
+
+Note that you can also change default parameters that we set in the parser, if you want to use another model to generate embeddings from, or if you want to change your input vocabulary (for example, to generate embeddings for another dataset).
 
 You can also directly evaluate your models from this script.
 When evaluating your model, rembember to specify the vocabulary path. Indeed, the default value is set to *output/words.txt* for simplifying the evaluation of extrinsic metrics.

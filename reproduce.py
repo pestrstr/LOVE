@@ -40,8 +40,8 @@ def main():
     reproduce_parser.add_argument('--eval', help='evaluate LOVE model', action='store_true')
     reproduce_parser.add_argument('--model_path', help='specify LOVE model path for eval', type=str, default='output/model_20.pt')
     reproduce_parser.add_argument('--eval_all', help='evalaute LOVE models (all epochs) in one shot. requires complete training', action='store_true')
-    reproduce_parser.add_argument('--gen_embeddings_sst2', help='generate embeddings for SST2', action='store_true')
-    reproduce_parser.add_argument('--gen_embeddings_conll03', help='generate embeddings for CoNLL-03', action='store_true')
+    reproduce_parser.add_argument('--gen_embeddings_tc', help='generate embeddings for text classification', action='store_true')
+    reproduce_parser.add_argument('--gen_embeddings_ner', help='generate embeddings for NER', action='store_true')
     reproduce_parser.add_argument('--vocab_path', help='vocab path. requires --gen_embedding', type=str, default='output/words.txt')
     reproduce_parser.add_argument('--emb_path', help='emb path. requires --gen_embedding', type=str, default='output/love.emb')
     reproduce_parser.add_argument('--text_classification', help='train CNN model for text classification', action='store_true')
@@ -63,7 +63,7 @@ def main():
     elif reproduce_args.eval_all:
         eval_all()
 
-    elif reproduce_args.gen_embeddings_conll03:
+    elif reproduce_args.gen_embeddings_ner:
         # Read & Write for corresponding json config file
         with open('emb_config.json', 'r') as config:
             emb_params = json.loads(config.read())
@@ -79,7 +79,7 @@ def main():
         program_path = 'gen_emb_conll.py'
         subprocess.run(['python', program_path])
 
-    elif reproduce_args.gen_embeddings_sst2:
+    elif reproduce_args.gen_embeddings_tc:
         with open('emb_config.json', 'r') as config:
             emb_params = json.loads(config.read())
 
