@@ -161,6 +161,15 @@ def single_run(args, word_vocab, pretrain_word_embedding):
 
 if __name__ == '__main__':
     args = parser.parse_args()
+
+    if args.dataset == 'BC2GM':
+        args.train_path = './evaluation/bc2gm/train.tsv'
+        args.dev_path = './evaluation/bc2gm/devel.tsv'
+        args.test_path = './evaluation/bc2gm/test.tsv'
+        # To reproduce results obtained in the LOVE paper
+        args.word_embed_dim = 300
+        args.pretrain_embed_path = './output/love.emb'
+
     word_vocab = WordVocabulary(args.train_path, args.dev_path, args.test_path, args.number_normalized)
     with open('output/words.txt', 'w', encoding='utf8')as f:
         f.write('\n'.join([str.lower(w) for w in word_vocab._id_to_word]))

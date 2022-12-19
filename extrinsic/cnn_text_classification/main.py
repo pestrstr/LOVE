@@ -25,7 +25,7 @@ parser.add_argument('--train_path', default='evaluation/train.tsv')
 parser.add_argument('--dev_path', default='evaluation/dev.tsv')
 parser.add_argument('--test_path', default='evaluation/test.tsv')
 parser.add_argument('--seed', type=int, default=42)
-parser.add_argument('--dataset', default='sst2')
+parser.add_argument('--dataset', default='SST2')
 
 class CNN(nn.Module):
     def __init__(self, vocab_size, embedding_dim, n_filters, filter_sizes,
@@ -475,9 +475,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     fixed_seed(seed=args.seed)
     
-    if args.dataset == 'sst2':
+    if args.dataset == 'SST2':
         run_sst2(args)
-    elif args.dataset == 'mr':
+    elif args.dataset == 'MR':
         run_mr(args)
     else:
         print("Error! No dataset named {a}.".format(a=args.dataset))

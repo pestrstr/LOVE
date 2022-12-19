@@ -48,6 +48,8 @@ def main():
     reproduce_parser.add_argument('--ner', help='train Bi-LSTM-CRF model for name entity recognition', action='store_true')
     reproduce_parser.add_argument('--pretrain_embed_path', help='pretrain embed path for ner or text classif. (relative to cnn or rnn folder)', type=str, default='extrinsic/rnn_ner/output/love.emb')
     reproduce_parser.add_argument('--emb_dim', help='embedding dim for pretrained embeddings', type=int, default=300)
+    reproduce_parser.add_argument('--tc_dataset', help='dataset for text-classification (SST2/MR)', default='SST2')
+    reproduce_parser.add_argument('--ner_dataset', help='dataset for name-entity recognition (CoNLL-03/BC2GM)', default='CoNLL-03')
 
     try:
         reproduce_args = reproduce_parser.parse_args()
@@ -97,6 +99,7 @@ def main():
         cwd = os.getcwd()
         os.chdir(cwd + "/extrinsic/cnn_text_classification")
         subprocess.run(['python', program_path,
+            '--dataset', reproduce_args.tc_dataset,
             '--pretrain_embed_path', reproduce_args.pretrain_embed_path,
             '--word_embed_dim', str(reproduce_args.emb_dim)])
         os.chdir(cwd)
@@ -105,7 +108,8 @@ def main():
         program_path = 'main.py'
         cwd = os.getcwd()
         os.chdir(cwd + "/extrinsic/rnn_ner")
-        subprocess.run(['python', program_path, 
+        subprocess.run(['python', program_path,
+                '--dataset', reproduce_args.tc_dataset, 
                 '--pretrain_embed_path', reproduce_args.pretrain_embed_path,
                 '--word_embed_dim', str(reproduce_args.emb_dim)])
         os.chdir(cwd)
