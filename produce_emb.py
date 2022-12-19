@@ -5,7 +5,13 @@ from torch.utils.data import DataLoader
 from utils import TextData, collate_fn_predict
 
 from train import args
-TOKENIZER = tokenization.FullTokenizer(vocab_file='data/vocab.txt', do_lower_case=args.lowercase)
+
+if args.emb_dim == 300:
+    vocab_file = 'data/vocab.txt'
+else:
+    vocab_file = 'data/wordpiece.txt'
+
+TOKENIZER = tokenization.FullTokenizer(vocab_file=vocab_file, do_lower_case=args.lowercase)
 vocab_size = len(TOKENIZER.vocab)
 args.vocab_size = vocab_size
 
