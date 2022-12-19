@@ -79,8 +79,8 @@ def main():
 
         program_path = 'gen_emb_conll.py'
         subprocess.run(['python', program_path,
-                        '-emb_dim', reproduce_args.emb_dim,
-                        '-vocab_size', reproduce_args.vocab_size])
+                        '-emb_dim', str(reproduce_args.emb_dim),
+                        '-vocab_size', str(reproduce_args.vocab_size)])
 
     elif reproduce_args.gen_embeddings_tc:
         with open('emb_config.json', 'r') as config:
@@ -96,8 +96,8 @@ def main():
 
         program_path = 'gen_emb_sst2.py'
         subprocess.run(['python', program_path,
-                        '-emb_dim', reproduce_args.emb_dim,
-                        '-vocab_size', reproduce_args.vocab_size])
+                        '-emb_dim', str(reproduce_args.emb_dim),
+                        '-vocab_size', str(reproduce_args.vocab_size)])
 
     elif reproduce_args.text_classification:
         program_path = 'main.py'
