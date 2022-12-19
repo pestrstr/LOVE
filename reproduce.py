@@ -109,7 +109,7 @@ def main():
         cwd = os.getcwd()
         os.chdir(cwd + "/extrinsic/rnn_ner")
         subprocess.run(['python', program_path,
-                '--dataset', reproduce_args.tc_dataset, 
+                '--dataset', reproduce_args.ner_dataset, 
                 '--pretrain_embed_path', reproduce_args.pretrain_embed_path,
                 '--word_embed_dim', str(reproduce_args.emb_dim)])
         os.chdir(cwd)
