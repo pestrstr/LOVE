@@ -24,12 +24,12 @@ np.random.seed(seed_num)
 
 
 parser = argparse.ArgumentParser(description='Named Entity Recognition Model')
-parser.add_argument('--word_embed_dim', type=int, default=768)
+parser.add_argument('--word_embed_dim', type=int, default=300)
 parser.add_argument('--word_hidden_dim', type=int, default=100)
 parser.add_argument('--char_embedding_dim', type=int, default=30)
 parser.add_argument('--char_hidden_dim', type=int, default=50)
 parser.add_argument('--dropout', type=float, default=0.5)
-parser.add_argument('--pretrain_embed_path', default='output/love_bert.emb')
+parser.add_argument('--pretrain_embed_path', default='output/love.emb')
 parser.add_argument('--savedir', default='output/')
 parser.add_argument('--batch_size', type=int, default=768)
 parser.add_argument('--epochs', type=int, default=100)
@@ -149,7 +149,7 @@ def single_run(args, word_vocab, pretrain_word_embedding):
     plt.xlabel('epochs')
     plt.ylabel('f1 on dev set over epochs')
     plt.legend()
-    plt.savefig('output/f1_measure_love_bert.pdf', bbox_inches='tight')
+    plt.savefig('output/f1_measure_love_mr.pdf', bbox_inches='tight')
     plt.close()
 
     print("Now evaluating the best model...")
