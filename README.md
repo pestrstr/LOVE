@@ -30,6 +30,11 @@ python reproduce.py --ner --ner_dataset DATASET_NAME --pretrain_embed_path outpu
 ```
 where *DATASET_NAME* is equal to *CoNLL-03* or *BC2GM*. 
 
+Besides using the *vanilla LOVE* model to obtain results for *MR* and *BC2GM* datasets, you can also test *merged models*, like BERT+LOVE, on these datasets. These results, however, are not reported on the official paper.
+```
+python reproduce.py --gen_embeddings_tc --model_path output/love_bert_base_uncased.pt --vocab_path output/words.txt --emb_path output/love_bert.emb --emb_dim 768
+python reproduce.py --text_classification --tc_dataset MR --pretrain_embed_path output/love_bert.emb --emb_dim 768
+```
 Note that you can also change default parameters that we set in the parser, if you want to use another model to generate embeddings from, or if you want to change your input vocabulary (for example, to generate embeddings for another dataset).
 
 You can also directly evaluate your models from this script.
