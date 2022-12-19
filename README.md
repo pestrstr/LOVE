@@ -14,19 +14,19 @@ For example, you might want to generate embeddings for the all the words in the 
 To do that, you can simply type:
 ```
 python reproduce.py --gen_embeddings_tc
-python reproduce.py --text_classification --dataset SST2 --pretrain_embed_path output/love.emb --emb_dim 300
+python reproduce.py --text_classification --tc_dataset SST2 --pretrain_embed_path output/love.emb --emb_dim 300
 ```
 You can also do the same exact thing for evaluating your model on the MR (Movie Review) dataset. If you have already generated embeddings for the SST2 dataset, you can skip the first part, as we will use the same vocabulary for evaluating the LOVE model on both datasets.
 
 ```
 python reproduce.py --gen_embeddings_tc
-python reproduce.py --text_classification --dataset MR --pretrain_embed_path output/love.emb --emb_dim 300
+python reproduce.py --text_classification --tc_dataset MR --pretrain_embed_path output/love.emb --emb_dim 300
 ```
 
 To reproduce NER results on *CoNLL-03* and *BC2GM* datasets, run the following command:
 ```
 python reproduce.py --gen_embeddings_ner
-python reproduce.py --ner --dataset DATASET_NAME --pretrain_embed_path output/love.emb --emb_dim 300
+python reproduce.py --ner --ner_dataset DATASET_NAME --pretrain_embed_path output/love.emb --emb_dim 300
 ```
 where *DATASET_NAME* is equal to *CoNLL-03* or *BC2GM*. 
 

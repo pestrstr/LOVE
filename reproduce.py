@@ -39,6 +39,8 @@ def main():
     reproduce_parser = argparse.ArgumentParser(description=description)
     reproduce_parser.add_argument('--eval', help='evaluate LOVE model', action='store_true')
     reproduce_parser.add_argument('--model_path', help='specify LOVE model path for eval', type=str, default='output/model_20.pt')
+    reproduce_parser.add_argument('--emb_dim', help='embeddings dim (fastText:300, BERT:768)', type=int, default=300)
+    reproduce_parser.add_argument('--vocab_size', help='size of vocabulary; precomputed automatically in most cases', type=int, default=0)
     reproduce_parser.add_argument('--eval_all', help='evalaute LOVE models (all epochs) in one shot. requires complete training', action='store_true')
     reproduce_parser.add_argument('--gen_embeddings_tc', help='generate embeddings for text classification', action='store_true')
     reproduce_parser.add_argument('--gen_embeddings_ner', help='generate embeddings for NER', action='store_true')
@@ -77,7 +79,9 @@ def main():
             json.dump(obj=emb_params, fp=config)
 
         program_path = 'gen_emb_conll.py'
-        subprocess.run(['python', program_path])
+        subprocess.run(['python', program_path,
+                        '-emb_dim', reproduce_args.emb_dim,
+                        '-vocab_size', reproduce_args.vocab_size])
 
     elif reproduce_args.gen_embeddings_tc:
         with open('emb_config.json', 'r') as config:
@@ -92,7 +96,9 @@ def main():
             json.dump(obj=emb_params, fp=config)
 
         program_path = 'gen_emb_sst2.py'
-        subprocess.run(['python', program_path])
+        subprocess.run(['python', program_path,
+                        '-emb_dim', reproduce_args.emb_dim,
+                        '-vocab_size', reproduce_args.vocab_size])
 
     elif reproduce_args.text_classification:
         program_path = 'main.py'
